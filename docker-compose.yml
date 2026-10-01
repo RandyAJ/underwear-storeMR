@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:16-alpine
-    container_name: underwear-postgres
+    container_name: underwear-postgresMR
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: QS1YR8URQ6
