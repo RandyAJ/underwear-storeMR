@@ -15,20 +15,18 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
     @NotNull
     private Long productId;
-
     @NotNull
     private String productName;
 
     @NotNull
     private BigDecimal price;
-
+    @NotNull
+    private Integer sale;
     @NotNull
     private BigDecimal totalPrice;
 
     @NotNull
     private Integer quantityOrdered;
-
 }
