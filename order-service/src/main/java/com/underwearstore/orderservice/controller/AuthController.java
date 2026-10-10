@@ -32,7 +32,7 @@ public class AuthController {
         return userService.login(username, password, email);
     }
 
-    @GetMapping("/login")
+    @GetMapping("/reshresh")
     public User refresh(){
         // ..
         return userService.refresh();
