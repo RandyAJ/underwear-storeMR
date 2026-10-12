@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Boolean login(@RequestBody RequestDto requestDto) {
+    public String login(@RequestBody RequestDto requestDto) {
         return userService.login(requestDto.email(), requestDto.password());
     }
 

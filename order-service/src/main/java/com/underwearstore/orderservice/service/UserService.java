@@ -10,9 +10,11 @@ import org.mindrot.jbcrypt.BCrypt;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, JwtService jwtService){
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     public User registration(String username, String password, String email){
@@ -33,7 +35,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Boolean login(String email, String password){
+    public String login(String email, String password){
         Optional<User> userOpt = userRepository.findByEmail(email);
         if(userOpt.isEmpty()){
             throw new RuntimeException("Пользователь с почтой '" + email + "' не зарегистрирован");
@@ -43,7 +45,7 @@ public class UserService {
             throw new RuntimeException("Неверный пароль!");
         }
 
-        return true;
+        return jwtService.createJwt(userOpt.get().getId().toString());
     }
 
 //    public User refresh(){
