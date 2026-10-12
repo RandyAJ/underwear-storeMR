@@ -5,6 +5,7 @@ import com.underwearstore.orderservice.repository.UserRepository;
 import com.underwearstore.orderservice.entity.User;
 
 import java.util.Optional;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Service
 public class UserService {
@@ -26,7 +27,8 @@ public class UserService {
             throw new RuntimeException("Пользователь с почтой '" + email + "' уже существует");
         }
 
-        User user = new User(null, username, password, email, "user");
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
+        User user = new User(null, username, hashedPassword, email, "user");
 
         return userRepository.save(user);
     }
@@ -37,8 +39,7 @@ public class UserService {
             throw new RuntimeException("Пользователь с почтой '" + email + "' не зарегистрирован");
         }
 
-        User user = userOpt.get();
-        if(!user.getPassword().equals(password)){
+        if(!(BCrypt.checkpw(password, userOpt.get().getPassword()))){
             throw new RuntimeException("Неверный пароль!");
         }
 
