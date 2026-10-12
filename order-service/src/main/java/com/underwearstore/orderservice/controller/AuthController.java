@@ -8,7 +8,7 @@ import com.underwearstore.orderservice.service.UserService;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private UserService userService;
+    private final UserService userService;
 
     public AuthController(UserService userService) {
         this.userService = userService;
@@ -19,22 +19,19 @@ public class AuthController {
             @RequestParam String username,
             @RequestParam String password,
             @RequestParam String email) {
-        // ..
         return userService.registration(username, password, email);
     }
 
     @GetMapping("/login")
-    public User login(
-            @RequestParam String username,
-            @RequestParam String password,
-            @RequestParam String email) {
-        // ..
-        return userService.login(username, password, email);
+    public Boolean login(
+            @RequestParam String email,
+            @RequestParam String password) {
+        return userService.login(email, password);
     }
 
-    @GetMapping("/refresh")
-    public User refresh(){
-        // ..
-        return userService.refresh();
-    }
+//    @GetMapping("/refresh")
+//    public User refresh(){
+//        // ..
+//        return userService.refresh();
+//    }
 }
