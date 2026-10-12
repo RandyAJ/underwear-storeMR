@@ -1,5 +1,7 @@
 package com.underwearstore.orderservice.controller;
 
+import com.underwearstore.orderservice.dto.RequestDto;
+import com.underwearstore.orderservice.dto.ResponeDto;
 import com.underwearstore.orderservice.entity.User;
 import org.springframework.web.bind.annotation.*;
 import com.underwearstore.orderservice.service.UserService;
@@ -14,19 +16,15 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping("/registration")
-    public User registration(
-            @RequestParam String username,
-            @RequestParam String password,
-            @RequestParam String email) {
-        return userService.registration(username, password, email);
+    @PostMapping("/registration") // Браузер запоминает историю запросов в юрл, поэтому передавать пароль через @RequestParam нельзя. А у GetMapping нет общепринятой поддержки тела запроса.
+    public ResponeDto registration(@RequestBody RequestDto requestDto) {
+        User user = userService.registration(requestDto.username(), requestDto.password(), requestDto.email());
+        return new ResponeDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole(), null);
     }
 
-    @GetMapping("/login")
-    public Boolean login(
-            @RequestParam String email,
-            @RequestParam String password) {
-        return userService.login(email, password);
+    @PostMapping("/login")
+    public Boolean login(@RequestBody RequestDto requestDto) {
+        return userService.login(requestDto.email(), requestDto.password());
     }
 
 //    @GetMapping("/refresh")
