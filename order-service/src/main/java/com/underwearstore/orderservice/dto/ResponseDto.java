@@ -1,9 +1,8 @@
 package com.underwearstore.orderservice.dto;
 
-public record ResponeDto(
+public record ResponseDto(
     Long id,
     String username,
     String email,
-    String role,
-    String password
+    String role
 ) {}
