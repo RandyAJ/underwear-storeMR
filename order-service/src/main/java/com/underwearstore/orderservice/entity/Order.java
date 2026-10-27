@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "orders")
 @AllArgsConstructor
+@NoArgsConstructor
 @Setter
 @Getter
 public class Order {
