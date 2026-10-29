@@ -18,7 +18,7 @@ public class OrderController {
         this.orderRepository = orderRepository;
     }
 
-    @GetMapping
+    @GetMapping("/checkAvailability")
     public Order checkAvailability(@RequestParam Long id, @RequestParam Integer quantityOrdered){
         return orderService.checkAvailability(id, quantityOrdered);
     }

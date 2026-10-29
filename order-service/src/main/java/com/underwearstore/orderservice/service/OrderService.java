@@ -5,6 +5,7 @@ import com.underwearstore.grpc.ProductResponse;
 import com.underwearstore.orderservice.entity.Order;
 import com.underwearstore.orderservice.grpc.InventoryGrpcClient;
 import com.underwearstore.orderservice.dto.OrderCreatedEvent;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
@@ -55,10 +56,13 @@ public class OrderService {
 
                 quantityOrdered
         );
-
         Order savedOrder = orderRepository.save(order);
-
-        OrderCreatedEvent event = new OrderCreatedEvent(
+		String user = SecurityContextHolder
+				.getContext()
+				.getAuthentication()
+				.getPrincipal()
+				.toString();
+		OrderCreatedEvent event = new OrderCreatedEvent(
 
             savedOrder.getId(),
             savedOrder.getProductId(),

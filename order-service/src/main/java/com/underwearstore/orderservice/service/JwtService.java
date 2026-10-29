@@ -3,6 +3,7 @@ package com.underwearstore.orderservice.service;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -15,7 +16,8 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-   	private static final String secret = "1DVZB5aymGYMPpIkBtrYD2k5c3MXzwG9O3vMAGriEPc=";
+	@Value("${jwt.secret}")
+   	private String secret;
 
    	String createAccessToken(String userId) {
 		return Jwts.builder()
@@ -42,6 +44,7 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token);
         } catch (JwtException e){
+			System.out.println(e);
 			return false;
         }
 
@@ -49,7 +52,7 @@ public class JwtService {
     }
 
     public String getSubject(String token){
-        if(validateToken(token) == true) {
+        if(validateToken(token)) {
             return Jwts.parserBuilder()
                     .setSigningKey(generatehmacKey())
                     .build()
@@ -62,7 +65,7 @@ public class JwtService {
     }
 
     private Key generatehmacKey(){
-        return new SecretKeySpec(Base64.getDecoder().decode(JwtService.secret),
+        return new SecretKeySpec(Base64.getDecoder().decode(this.secret),
                 SignatureAlgorithm.HS256.getJcaName());
     }
 
@@ -84,6 +87,23 @@ public class JwtService {
 		return false;
 	}
 
+	public boolean isAccessToken(String accessToken){
+		try{
+			String tokenType = Jwts.parserBuilder()
+					.setSigningKey(generatehmacKey())
+					.build()
+					.parseClaimsJws(accessToken)
+					.getBody()
+					.get("tokenType", String.class);
+			return tokenType.equals("access");
+
+		} catch (JwtException e){
+			System.out.println(e.getMessage());
+		}
+
+		return false;
+	}
+
 	public Date getJwtExpiration(String refreshToken){
 		return Jwts.parserBuilder()
 				.setSigningKey(generatehmacKey())
@@ -91,5 +111,12 @@ public class JwtService {
 				.parseClaimsJws(refreshToken)
 				.getBody()
 				.getExpiration();
+	}
+
+	// если дата истечения токена позже текущего времени - вернет true
+	public boolean isTokenExpired(String token){
+		return this.getJwtExpiration(token)
+				.toInstant()
+				.isAfter(Instant.now());
 	}
 }

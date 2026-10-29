@@ -8,10 +8,8 @@ import com.underwearstore.orderservice.repository.UserRepository;
 import com.underwearstore.orderservice.entity.User;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.Optional;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -67,18 +65,11 @@ public class UserService {
 		);
 
 		return new TokenResponseDto(
-				jwtService.createAccessToken(userId.toString()),
-				refreshToken
+				jwtService.createAccessToken(userId.toString())
 		);
     }
-//	{
-//		"accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMDciLCJleHAiOjE3OTMxMTU2NTksInRva2VuVHlwZSI6ImFjY2VzcyJ9.dbJzN3Jw4A__TZ8YvZlSfeNrHANFQhmPdKD2y_QBbYs",
-//		"refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMDciLCJleHAiOjE3OTM3MTk1NTksInRva2VuVHlwZSI6InJlZnJlc2gifQ.7v5ZmT561Dnm_Kuw1WC1yphNh7ArXoQkeqtJ5c1W030"
-//	}
 
-	@Transactional
-    public TokenResponseDto refresh(String refreshToken){
-
+    public TokenResponseDto refreshAccessToken(String refreshToken){
 		if(!(jwtService.isRefreshToken(refreshToken))){
 			throw new RuntimeException("Тип токена не является 'refresh'");
 		}
@@ -95,22 +86,12 @@ public class UserService {
 			throw new RuntimeException("Рефреш-токен устарел, логиньтесь заново");
 		}
 
-		if(!(refToken.getUser().getId().toString().equals(userId)) ){
+		if(!(refToken.getUser().getId().toString().equals(userId)) ){ // интересный мог бы быть баг
 			throw new RuntimeException("Несовпадение айди юзера у токена");
 		}
 
 		String newAccessToken = jwtService.createAccessToken(userId);
-		String newRefreshToken = jwtService.createRefreshToken(userId);
 
-		refToken.setRefreshToken(newRefreshToken);
-		refToken.setExpiryDate(
-				jwtService
-					.getJwtExpiration(newRefreshToken)
-					.toInstant()
-		);
-
-		refreshTokenRepository.save(refToken);
-
-		return new TokenResponseDto(newAccessToken, newRefreshToken);
+		return new TokenResponseDto(newAccessToken);
     }
 }

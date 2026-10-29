@@ -7,8 +7,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import com.underwearstore.orderservice.security.JwtAuthenticationFilter;
 
-// заглушка для Спринг Секьюрити
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -26,8 +24,7 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .formLogin(form -> form.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/registration", "/api/auth/login").permitAll()
-//                        .requestMatchers("/api/orders/all").permitAll()
+                        .requestMatchers("/api/auth/registration", "/api/auth/login", "/api/auth/refresh").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
