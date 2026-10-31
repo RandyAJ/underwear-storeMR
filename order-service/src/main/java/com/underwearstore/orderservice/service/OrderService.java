@@ -45,6 +45,14 @@ public class OrderService {
         BigDecimal totalPrice = new BigDecimal(productResponse.getPrice())
                 .multiply(BigDecimal.valueOf(quantityOrdered));
 
+		Integer userId = Integer.valueOf(
+				SecurityContextHolder
+						.getContext()
+						.getAuthentication()
+						.getPrincipal()
+						.toString()
+		);
+
         Order order = new Order(
                 null,
                 productResponse.getId(),
@@ -54,14 +62,12 @@ public class OrderService {
                 productResponse.getSale(),
                 totalPrice,
 
-                quantityOrdered
+                quantityOrdered,
+				userId
         );
+
         Order savedOrder = orderRepository.save(order);
-		String user = SecurityContextHolder
-				.getContext()
-				.getAuthentication()
-				.getPrincipal()
-				.toString();
+
 		OrderCreatedEvent event = new OrderCreatedEvent(
 
             savedOrder.getId(),
@@ -72,8 +78,8 @@ public class OrderService {
             savedOrder.getSale(),
             savedOrder.getTotalPrice(),
 
-            savedOrder.getQuantityOrdered()
-//          savedOrder.getUserId()
+            savedOrder.getQuantityOrdered(),
+			userId
         );
 
         kafkaProducerService.sendMessage(event);

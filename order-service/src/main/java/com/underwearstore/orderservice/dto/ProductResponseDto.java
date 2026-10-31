@@ -8,9 +8,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ProductResponseDto {
     private Long id;
-    private String name;
-    private boolean available;
-    private Integer quantity;
+	private Long productId;
+	private String productName;
+
     private BigDecimal price;
     private Integer sale;
+    private BigDecimal totalPrice;
+
+    private Integer quantityOrdered;
+	private Integer userId;
 }

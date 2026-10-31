@@ -1,5 +1,7 @@
 package com.underwearstore.orderservice.controller;
 
+import com.underwearstore.orderservice.dto.ProductResponseDto;
+import com.underwearstore.orderservice.dto.ResponseDto;
 import com.underwearstore.orderservice.entity.Order;
 import com.underwearstore.orderservice.repository.OrderRepository;
 import com.underwearstore.orderservice.service.OrderService;
@@ -19,8 +21,20 @@ public class OrderController {
     }
 
     @GetMapping("/checkAvailability")
-    public Order checkAvailability(@RequestParam Long id, @RequestParam Integer quantityOrdered){
-        return orderService.checkAvailability(id, quantityOrdered);
+    public ProductResponseDto checkAvailability(@RequestParam Long id, @RequestParam Integer quantityOrdered){
+		Order order = orderService.checkAvailability(id, quantityOrdered);
+        return new ProductResponseDto(
+				order.getId(),
+				order.getProductId(),
+				order.getProductName(),
+
+				order.getPrice(),
+				order.getSale(),
+				order.getTotalPrice(),
+
+				order.getQuantityOrdered(),
+				order.getUserId()
+		);
     }
 
     @GetMapping("/all")

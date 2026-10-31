@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "orders")
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 public class Notification {
@@ -18,18 +19,18 @@ public class Notification {
     private Long orderId;
     @NotNull
     private Long productId;
+
     @NotNull
     private String productName;
-
     @NotNull
     private BigDecimal price;
     @NotNull
     private Integer sale;
-    @NotNull
-    private BigDecimal totalPrice;
 
     @NotNull
+    private BigDecimal totalPrice;
+    @NotNull
     private Integer quantityOrdered;
-//    @NotNull
-//    private Long userId;
+    @NotNull
+    private Integer userId;
 }

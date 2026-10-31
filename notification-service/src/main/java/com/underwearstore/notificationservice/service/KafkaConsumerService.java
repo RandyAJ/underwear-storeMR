@@ -10,25 +10,19 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumerService {
 
     private final NotificationRepository notificationRepository;
+	private final NotificationService notificationService;
 
-    public KafkaConsumerService(NotificationRepository notificationRepository) {
+    public KafkaConsumerService(NotificationRepository notificationRepository, NotificationService notificationService) {
         this.notificationRepository = notificationRepository;
+		this.notificationService = notificationService;
     }
 
     @KafkaListener(topics = "orders", groupId = "notification-service")
     public void consume(OrderCreatedEvent event) {
-
-        Notification notification = new Notification();
-
-        notification.setOrderId(event.getOrderId());
-        notification.setProductId(event.getProductId());
-        notification.setProductName(event.getProductName());
-        notification.setQuantityOrdered(event.getQuantityOrdered());
-        notification.setPrice(event.getPrice());
-        notification.setSale(event.getSale());
-        notification.setTotalPrice(event.getTotalPrice());
-
-        notificationRepository.save(notification);
-
+		notificationService.save(
+				event.getOrderId(), event.getProductId(), event.getProductName(),
+				event.getPrice(), event.getSale(), event.getTotalPrice(),
+				event.getQuantityOrdered(), event.getUserId()
+		);
     }
 }

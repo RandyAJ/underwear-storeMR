@@ -30,4 +30,7 @@ public class Order {
 
     @NotNull
     private Integer quantityOrdered;
+
+	@NotNull
+	private Integer userId;
 }
