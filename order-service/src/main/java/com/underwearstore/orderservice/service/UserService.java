@@ -1,5 +1,6 @@
 package com.underwearstore.orderservice.service;
 
+import com.underwearstore.orderservice.dto.AllTokenResponseDto;
 import com.underwearstore.orderservice.dto.TokenResponseDto;
 import com.underwearstore.orderservice.entity.RefreshToken;
 import com.underwearstore.orderservice.repository.RefreshTokenRepository;
@@ -41,7 +42,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public TokenResponseDto login(String email, String password){
+    public AllTokenResponseDto login(String email, String password){
         Optional<User> userOpt = userRepository.findByEmail(email);
         if(userOpt.isEmpty()){
             throw new RuntimeException("Пользователь с почтой '" + email + "' не зарегистрирован");
@@ -64,8 +65,9 @@ public class UserService {
 			)
 		);
 
-		return new TokenResponseDto(
-				jwtService.createAccessToken(userId.toString())
+		return new AllTokenResponseDto(
+				jwtService.createAccessToken(userId.toString()),
+				refreshToken
 		);
     }
 

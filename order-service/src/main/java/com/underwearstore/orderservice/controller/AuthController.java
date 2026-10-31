@@ -1,9 +1,6 @@
 package com.underwearstore.orderservice.controller;
 
-import com.underwearstore.orderservice.dto.RequestDto;
-import com.underwearstore.orderservice.dto.ResponseDto;
-import com.underwearstore.orderservice.dto.TokenRequestDto;
-import com.underwearstore.orderservice.dto.TokenResponseDto;
+import com.underwearstore.orderservice.dto.*;
 import com.underwearstore.orderservice.entity.User;
 import org.springframework.web.bind.annotation.*;
 import com.underwearstore.orderservice.service.UserService;
@@ -25,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public TokenResponseDto login(@RequestBody RequestDto requestDto) {
+    public AllTokenResponseDto login(@RequestBody RequestDto requestDto) {
         return userService.login(requestDto.email(), requestDto.password());
     }
 
