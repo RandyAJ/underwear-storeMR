@@ -20,13 +20,13 @@ public class NotificationController {
         return notificationService.list();
     }
 
-    @GetMapping
+    @GetMapping("/findAllByOrderId")
     public List<Notification> findAllByOrderId(@RequestParam Long orderId){
         return notificationService.findAllByOrderId(orderId);
     }
 
-//    @GetMapping
-//    public List<Notification> findAllByUserId(@RequestParam Long userId){
-//        return notificationService.findAllByUserId(userId);
-//    }
+	@GetMapping("/findAllByUserId")
+    public List<Notification> findAllByUserId(@RequestParam Long userId){
+        return notificationService.findAllByUserId(userId);
+    }
 }

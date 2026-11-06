@@ -24,6 +24,10 @@ public class NotificationService {
         return notificationRepository.findAllByOrderId(orderId);
     }
 
+    public List<Notification> findAllByUserId(Long orderId){
+        return notificationRepository.findAllByUserId(orderId);
+    }
+
 	public void save(
 			Long orderId, Long productId,
 			String productName, BigDecimal price,Integer sale,
@@ -37,8 +41,4 @@ public class NotificationService {
 			)
 		);
 	}
-
-    public List<Notification> findAllByUserId(Long orderId){
-        return notificationRepository.findAllByUserId(orderId);
-    }
 }
